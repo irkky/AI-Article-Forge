@@ -7,7 +7,15 @@
       "src": "server/vercel-handler.ts",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["dist/public/**"]
+        "includeFiles": [
+          "dist/public/**",
+          "server/app.js",
+          "server/app.ts",
+          "server/routes.js",
+          "server/routes.ts",
+          "server/vite.js",
+          "server/vite.ts"
+        ]
       }
     }
   ],
