@@ -9,6 +9,6 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "server/vercel-handler.ts" },
     { "handle": "filesystem" },
-    { "src": "/.*", "dest": "dist/public/index.html" }
+    { "src": "/.*", "dest": "index.html" }
   ]
 }
