@@ -1,0 +1,47 @@
+I want you to generate a complete technical plan and implementation blueprint for a full-stack web application with the following requirements. Only describe architecture, responsibilities, folder structure, components, flows, and integration logic.
+
+**Tech Stack:**
+
+* Next.js (React Framework)
+* Tailwind CSS for styling
+* shadcn/ui for components
+* Markdown rendering for blog articles
+* Perplexity API for AI article generation
+* Vercel Postgres as the database
+* Deployment will be on Vercel
+
+**Primary Goal:**
+Build a system where I can input a list of blog titles, and the application will generate full article content using the Perplexity API, save each article to the database, and publish them on the site as markdown-rendered blog pages.
+
+**Your Output Should Include:**
+
+1. **Overall architecture explanation** (frontend, backend, database, API layers).
+2. **Detailed project folder structure** (all folders + purpose).
+3. **List of required environment variables** and how the app will use them.
+4. **Database schema design** (tables, fields, relationships, constraints).
+5. **Flow: blog article generation using Perplexity API**
+
+   * Input format
+   * API request blueprint
+   * Response handling flow
+   * Markdown storage strategy
+   * Slug generation rules
+6. **Flow: fetching and displaying blogs**
+
+   * Blog listing
+   * Blog detail page
+   * Markdown rendering pipeline
+7. **Frontend UI/UX requirements**
+
+   * Pages and their responsibilities
+   * Components needed (shadcn/ui + Tailwind)
+   * State handling
+8. **API routes design** (no code, just what each route does).
+9. **Security considerations** (rate limits, validation, sanitation, markdown safety).
+10. **Vercel deployment instructions** (repo setup, env vars, build steps).
+11. **Additional recommended optimizations** (ISR, caching, edge functions, pagination, error handling).
+
+**Important:**
+
+* Focus on system design, structure, flows, and implementation details.
+* Make the plan production-ready.
