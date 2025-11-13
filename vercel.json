@@ -4,22 +4,16 @@
   "outputDirectory": "dist/public",
   "builds": [
     {
-      "src": "server/vercel-handler.ts",
+      "src": "dist/server/vercel-handler.js",
       "use": "@vercel/node",
       "config": {
         "includeFiles": [
-          "dist/public/**",
-          "server/app.js",
-          "server/app.ts",
-          "server/routes.js",
-          "server/routes.ts",
-          "server/vite.js",
-          "server/vite.ts"
+          "dist/public/**"
         ]
       }
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "server/vercel-handler.ts" }
+    { "src": "/(.*)", "dest": "dist/server/vercel-handler.js" }
   ]
 }
