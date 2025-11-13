@@ -2,18 +2,18 @@
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist/public",
-  "builds": [
-    {
-      "src": "dist/server/vercel-handler.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "dist/public/**"
-        ]
-      }
+  "functions": {
+    "api/index.ts": {
+      "runtime": "nodejs20.x",
+      "includeFiles": [
+        "dist/public/**",
+        "server/**",
+        "shared/**"
+      ]
     }
-  ],
+  },
   "routes": [
-    { "src": "/(.*)", "dest": "dist/server/vercel-handler.js" }
+    { "src": "/api/(.*)", "dest": "/api/index.ts" },
+    { "src": "/(.*)", "dest": "/api/index.ts" }
   ]
 }
