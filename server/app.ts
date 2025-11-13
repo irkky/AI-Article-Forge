@@ -1,7 +1,7 @@
 import express, { type Request, type Response, type NextFunction } from "express";
 import type { Express } from "express";
 import { registerRoutes } from "./routes";
-import { log } from "./vite";
+import { log, serveStatic } from "./vite";
 
 declare module "http" {
   interface IncomingMessage {
@@ -41,7 +41,13 @@ function attachLogging(app: Express) {
   });
 }
 
-export async function createApp(): Promise<Express> {
+type CreateAppOptions = {
+  attachStatic?: boolean;
+};
+
+export async function createApp(
+  options: CreateAppOptions = {},
+): Promise<Express> {
   const app = express();
 
   app.use(
@@ -56,6 +62,10 @@ export async function createApp(): Promise<Express> {
   attachLogging(app);
 
   await registerRoutes(app);
+
+  if (options.attachStatic) {
+    serveStatic(app);
+  }
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

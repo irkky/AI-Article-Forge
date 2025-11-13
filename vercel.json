@@ -3,12 +3,15 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist/public",
   "builds": [
-    { "src": "server/vercel-handler.ts", "use": "@vercel/node" },
-    { "src": "dist/public/**/*", "use": "@vercel/static" }
+    {
+      "src": "server/vercel-handler.ts",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["dist/public/**"]
+      }
+    }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "server/vercel-handler.ts" },
-    { "handle": "filesystem" },
-    { "src": "/.*", "dest": "index.html" }
+    { "src": "/(.*)", "dest": "server/vercel-handler.ts" }
   ]
 }
