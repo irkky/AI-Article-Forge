@@ -68,9 +68,16 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
+  // Use process.cwd() for Vercel compatibility, fallback to import.meta.dirname for local dev
+  const projectRoot = process.cwd();
   const candidatePaths = [
-    path.resolve(import.meta.dirname, "public"),
-    path.resolve(import.meta.dirname, "..", "dist", "public"),
+    path.resolve(projectRoot, "dist", "public"),
+    path.resolve(projectRoot, "public"),
+    // Fallback for local development
+    ...(typeof import.meta.dirname !== "undefined" ? [
+      path.resolve(import.meta.dirname, "public"),
+      path.resolve(import.meta.dirname, "..", "dist", "public"),
+    ] : []),
   ];
 
   const distPath = candidatePaths.find((candidate) => fs.existsSync(candidate));
