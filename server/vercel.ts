@@ -1,6 +1,7 @@
-import { createApp } from "./app";
-import { log } from "./vite";
+import { createApp } from "./app.js";
+import { log } from "./vite.js";
 import type { IncomingMessage, ServerResponse } from "http";
+import type { Request, Response } from "express";
 
 const appPromise = (async () => {
   try {
@@ -44,7 +45,8 @@ export default async function handler(
       });
       
       // Invoke Express app with error handling
-      app(req, res, (err?: Error) => {
+      // Type assertion: Express Request extends IncomingMessage, Response extends ServerResponse
+      app(req as Request, res as Response, (err?: Error) => {
         if (err) {
           if (!resolved) {
             resolved = true;
