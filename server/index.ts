@@ -1,6 +1,6 @@
 import { createServer } from "http";
-import { createApp } from "./app";
-import { setupVite, serveStatic, log } from "./vite";
+import { createApp } from "./app.js";
+import { setupVite, serveStatic, log } from "./vite.js";
 
 (async () => {
   const app = await createApp();
