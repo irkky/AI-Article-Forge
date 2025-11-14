@@ -1,10 +1,11 @@
 import { createApp } from "./app";
-import { serveStatic, log } from "./vite";
+import { log } from "./vite";
 import type { IncomingMessage, ServerResponse } from "http";
 
 const appPromise = (async () => {
-  const app = await createApp();
-  serveStatic(app);
+  // Don't attach static file serving on Vercel - Vercel handles static files
+  // via the outputDirectory setting in vercel.json
+  const app = await createApp({ attachStatic: false });
   log("Express app initialized for Vercel runtime", "vercel");
   return app;
 })();
