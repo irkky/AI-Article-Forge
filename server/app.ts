@@ -65,14 +65,30 @@ export async function createApp(
 
   if (options.attachStatic) {
     serveStatic(app);
+  } else {
+    // On Vercel, static files are served separately, but we need a fallback
+    // for SPA client-side routing (non-API routes should serve index.html)
+    app.use((req, res, next) => {
+      // Skip API routes and static file extensions
+      if (req.path.startsWith("/api") || 
+          req.path.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/)) {
+        return next();
+      }
+      // For SPA routing, send 404 status but serve index.html
+      // The client router will handle the route
+      res.status(404).json({ error: "Not Found" });
+    });
   }
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
-    res.status(status).json({ message });
-    throw err;
+    if (!res.headersSent) {
+      res.status(status).json({ message });
+    }
+    // Don't throw after sending response in serverless context
+    console.error("Express error handler:", err);
   });
 
   return app;

@@ -1,2 +1,2 @@
-export { default, config } from "../server/vercel";
+export { default } from "../server/vercel";
 
