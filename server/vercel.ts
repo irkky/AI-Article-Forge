@@ -1,21 +1,4 @@
-import { createApp } from "./app.js";
-import { log } from "./vite.js";
-import type { IncomingMessage, ServerResponse } from "http";
-import type { Request, Response } from "express";
-
-const appPromise = (async () => {
-  try {
-    // Don't attach static file serving on Vercel - Vercel handles static files
-    // via the outputDirectory setting in vercel.json
-    const app = await createApp({ attachStatic: false });
-    log("Express app initialized for Vercel runtime", "vercel");
-    return app;
-  } catch (error) {
-    console.error("Failed to initialize Express app:", error);
-    throw error;
-  }
-})();
-
+// server/vercel.ts - Replace the handler function
 export default async function handler(
   req: IncomingMessage,
   res: ServerResponse,
@@ -45,8 +28,8 @@ export default async function handler(
       });
       
       // Invoke Express app with error handling
-      // Type assertion: Express Request extends IncomingMessage, Response extends ServerResponse
-      app(req as Request, res as Response, (err?: Error) => {
+      // Fix: Use proper NextFunction signature
+      app(req as Request, res as Response, (err?: any) => {  // Changed from Error to any
         if (err) {
           if (!resolved) {
             resolved = true;
@@ -77,4 +60,3 @@ export default async function handler(
     throw error;
   }
 }
-
