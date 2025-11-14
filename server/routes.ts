@@ -1,7 +1,7 @@
 import type { Express } from "express";
-import { storage } from "./storage";
-import { generateArticleContent } from "./gemini";
-import { insertArticleSchema, updateArticleSchema } from "@shared/schema";
+import { storage } from "./storage.js";
+import { generateArticleContent } from "./gemini.js";
+import { insertArticleSchema, updateArticleSchema } from "@shared/schema.js";
 import slugify from "slugify";
 
 export async function registerRoutes(app: Express): Promise<void> {

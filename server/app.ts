@@ -1,7 +1,7 @@
 import express, { type Request, type Response, type NextFunction } from "express";
 import type { Express } from "express";
-import { registerRoutes } from "./routes";
-import { log, serveStatic } from "./vite";
+import { registerRoutes } from "./routes.js";
+import { log, serveStatic } from "./vite.js";
 
 declare module "http" {
   interface IncomingMessage {

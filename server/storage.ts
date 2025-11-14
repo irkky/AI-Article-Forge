@@ -1,5 +1,5 @@
-import { articles, type Article, type InsertArticle, type UpdateArticle } from "@shared/schema";
-import { db } from "./db";
+import { articles, type Article, type InsertArticle, type UpdateArticle } from "@shared/schema.js";
+import { db } from "./db.js";
 import { eq, desc, and, sql } from "drizzle-orm";
 
 export interface IStorage {
