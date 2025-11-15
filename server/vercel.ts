@@ -1,12 +1,21 @@
 import { createApp } from "./app.js";
-import { log } from "./vite.js";
 import type { IncomingMessage, ServerResponse } from "http";
 import type { Request, Response } from "express";
+
+function log(message: string, source = "vercel") {
+  const formattedTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
 
 const appPromise = (async () => {
   try {
     const app = await createApp({ attachStatic: false });
-    log("Express app initialized for Vercel runtime", "vercel");
+    log("Express app initialized for Vercel runtime");
     return app;
   } catch (error) {
     console.error("Failed to initialize Express app:", error);
