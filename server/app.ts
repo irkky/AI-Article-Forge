@@ -1,6 +1,9 @@
 import express, { type Request, type Response, type NextFunction } from "express";
 import type { Express } from "express";
 import { registerRoutes } from "./routes.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
 
 declare module "http" {
   interface IncomingMessage {
@@ -72,13 +75,33 @@ export async function createApp(
 
   await registerRoutes(app);
 
-  if (!options.attachStatic) {
-    app.use((req, res, next) => {
-      if (req.path.startsWith("/api")) {
-        return next();
-      }
-      res.status(404).json({ error: "Not Found" });
-    });
+  if (options.attachStatic) {
+  } else {
+    const projectRoot = process.cwd();
+    const publicDir = path.join(projectRoot, "dist", "public");
+    
+    if (fs.existsSync(publicDir)) {
+      app.use(express.static(publicDir));
+      
+      app.use((req, res, next) => {
+        if (req.path.startsWith("/api")) {
+          return next();
+        }
+        
+        if (req.path.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$/)) {
+          return next();
+        }
+        
+        const indexPath = path.join(publicDir, "index.html");
+        if (fs.existsSync(indexPath)) {
+          res.sendFile(indexPath);
+        } else {
+          res.status(404).json({ error: "Not Found" });
+        }
+      });
+    } else {
+      log(`Warning: Public directory not found at ${publicDir}`);
+    }
   }
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
