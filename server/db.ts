@@ -11,7 +11,6 @@ if (!connectionString) {
 
 export const pool = createPool({
   connectionString,
-  // Vercel-managed databases enforce TLS; local development URLs usually disable it via parameters.
   ssl: connectionString.includes("localhost") ? false : undefined,
 });
 
