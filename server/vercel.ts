@@ -1,4 +1,19 @@
-// server/vercel.ts - Replace the handler function
+import { createApp } from "./app.js";
+import { log } from "./vite.js";
+import type { IncomingMessage, ServerResponse } from "http";
+import type { Request, Response } from "express";
+
+const appPromise = (async () => {
+  try {
+    const app = await createApp({ attachStatic: false });
+    log("Express app initialized for Vercel runtime", "vercel");
+    return app;
+  } catch (error) {
+    console.error("Failed to initialize Express app:", error);
+    throw error;
+  }
+})();
+
 export default async function handler(
   req: IncomingMessage,
   res: ServerResponse,
@@ -6,7 +21,6 @@ export default async function handler(
   try {
     const app = await appPromise;
     
-    // Wrap Express handler in a promise for proper async handling
     return new Promise<void>((resolve, reject) => {
       let resolved = false;
       
@@ -17,7 +31,6 @@ export default async function handler(
         }
       };
       
-      // Handle response completion
       res.once('finish', cleanup);
       res.once('close', cleanup);
       res.once('error', (err) => {
@@ -27,13 +40,10 @@ export default async function handler(
         }
       });
       
-      // Invoke Express app with error handling
-      // Fix: Use proper NextFunction signature
-      app(req as Request, res as Response, (err?: any) => {  // Changed from Error to any
+      app(req as Request, res as Response, (err?: any) => {
         if (err) {
           if (!resolved) {
             resolved = true;
-            // If headers haven't been sent, send error response
             if (!res.headersSent) {
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
