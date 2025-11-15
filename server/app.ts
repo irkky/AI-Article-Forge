@@ -1,12 +1,21 @@
 import express, { type Request, type Response, type NextFunction } from "express";
 import type { Express } from "express";
 import { registerRoutes } from "./routes.js";
-import { log, serveStatic } from "./vite.js";
 
 declare module "http" {
   interface IncomingMessage {
     rawBody: unknown;
   }
+}
+
+function log(message: string) {
+  const formattedTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+  console.log(`${formattedTime} [express] ${message}`);
 }
 
 function attachLogging(app: Express) {
@@ -63,19 +72,11 @@ export async function createApp(
 
   await registerRoutes(app);
 
-  if (options.attachStatic) {
-    serveStatic(app);
-  } else {
-    // On Vercel, static files are served separately, but we need a fallback
-    // for SPA client-side routing (non-API routes should serve index.html)
+  if (!options.attachStatic) {
     app.use((req, res, next) => {
-      // Skip API routes and static file extensions
-      if (req.path.startsWith("/api") || 
-          req.path.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/)) {
+      if (req.path.startsWith("/api")) {
         return next();
       }
-      // For SPA routing, send 404 status but serve index.html
-      // The client router will handle the route
       res.status(404).json({ error: "Not Found" });
     });
   }
@@ -87,10 +88,8 @@ export async function createApp(
     if (!res.headersSent) {
       res.status(status).json({ message });
     }
-    // Don't throw after sending response in serverless context
     console.error("Express error handler:", err);
   });
 
   return app;
 }
-
