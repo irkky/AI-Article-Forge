@@ -12,9 +12,10 @@ if (!apiKey) {
   throw new Error("GEMINI_API_KEY must be set");
 }
 
-const modelId = process.env.GEMINI_MODEL ?? "gemini-2.0-flash-exp";
+const modelId = process.env.GEMINI_MODEL ?? "gemini-2.0-flash";
 
 const genAI = new GoogleGenerativeAI(apiKey);
+
 const baseModel = genAI.getGenerativeModel({
   model: modelId,
   safetySettings: [
@@ -62,7 +63,7 @@ async function generateText(model: GenerativeModel, prompt: string): Promise<str
   }
 
   if (candidate.finishReason && candidate.finishReason !== "STOP") {
-    console.error("Gemini generation stopped before completion", {
+    console.error("Gemini generation stopped early", {
       finishReason: candidate.finishReason,
       promptPreview: prompt.slice(0, 120),
       citationMetadata: candidate.citationMetadata,
@@ -88,7 +89,6 @@ function trimForExcerpt(content: string, maxLength = 2000): string {
     return content;
   }
 
-  // try to cut at sentence boundary
   const truncated = content.slice(0, maxLength);
   const lastSentenceEnd = truncated.lastIndexOf(".");
   if (lastSentenceEnd > maxLength * 0.6) {
@@ -98,7 +98,9 @@ function trimForExcerpt(content: string, maxLength = 2000): string {
   return truncated;
 }
 
-export async function generateArticleContent(title: string): Promise<{ content: string; excerpt: string }> {
+export async function generateArticleContent(
+  title: string
+): Promise<{ content: string; excerpt: string }> {
   const articlePrompt = `You are an expert technical writer. Write a comprehensive, well-researched blog article about: "${title}"
 
 Requirements:
@@ -112,7 +114,7 @@ Requirements:
 8. Do NOT include the main title (# ${title}) as it will be added separately
 9. Start directly with the introduction paragraph
 
-Write the complete article now:`;
+Write the complete article now:`.
 
   const content = await generateText(baseModel, articlePrompt);
 
@@ -124,7 +126,7 @@ Write the complete article now:`;
 Article body:
 ${trimForExcerpt(content)}
 
-Respond with the summary only:`;
+Respond with the summary only:`.
 
   const excerpt = await generateText(baseModel, excerptPrompt);
 
