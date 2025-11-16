@@ -114,7 +114,7 @@ Requirements:
 8. Do NOT include the main title (# ${title}) as it will be added separately
 9. Start directly with the introduction paragraph
 
-Write the complete article now:`.
+Write the complete article now:`;
 
   const content = await generateText(baseModel, articlePrompt);
 
