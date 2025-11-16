@@ -27,7 +27,7 @@ export const updateArticleSchema = createInsertSchema(articles)
   })
   .extend({
     publishedAt: z
-      .union([z.string(), z.date()])
+      .union([z.string(), z.date(), z.null()])
       .transform((val) => (val ? new Date(val) : null))
       .optional(),
   })
