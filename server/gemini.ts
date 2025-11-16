@@ -126,7 +126,7 @@ Write the complete article now:`;
 Article body:
 ${trimForExcerpt(content)}
 
-Respond with the summary only:`.
+Respond with the summary only:`;
 
   const excerpt = await generateText(baseModel, excerptPrompt);
 
