@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -20,10 +20,18 @@ export const insertArticleSchema = createInsertSchema(articles).omit({
   createdAt: true,
 });
 
-export const updateArticleSchema = createInsertSchema(articles).omit({
-  id: true,
-  createdAt: true,
-}).partial();
+export const updateArticleSchema = createInsertSchema(articles)
+  .omit({
+    id: true,
+    createdAt: true,
+  })
+  .extend({
+    publishedAt: z
+      .union([z.string(), z.date()])
+      .transform((val) => (val ? new Date(val) : null))
+      .optional(),
+  })
+  .partial();
 
 export type InsertArticle = z.infer<typeof insertArticleSchema>;
 export type UpdateArticle = z.infer<typeof updateArticleSchema>;
